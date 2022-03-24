@@ -249,6 +249,7 @@ pub struct ExecuteTransaction<'info> {
         seeds = [multisig.key().as_ref()],
         bump = multisig.nonce,
     )]
+    /// CHECK: multisig_signer is a PDA program signer. Data is never read or written to. 
     multisig_signer: UncheckedAccount<'info>,
     #[account(mut, has_one = multisig)]
     transaction: Box<Account<'info, Transaction>>,
@@ -263,6 +264,7 @@ pub struct DropTransaction<'info> {
     )]
     transaction: Box<Account<'info, Transaction>>,
     #[account(mut)]
+    /// CHECK: part of transaction dropping
     successor: AccountInfo<'info>,
 }
 
@@ -340,7 +342,7 @@ fn assert_unique_owners(owners: &[Pubkey]) -> Result<()> {
     Ok(())
 }
 
-#[error]
+#[error_code]
 pub enum ErrorCode {
     #[msg("The given owner is not part of this multisig.")]
     InvalidOwner,
